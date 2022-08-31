@@ -1,0 +1,22 @@
+{
+  "name": "dudescanner",
+  "version": "1.0.0",
+  "description": "Electronic scanner for student ID's, for hall passes and rewards systems.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tsiegmund/dudescanner.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tsiegmund/dudescanner/issues"
+  },
+  "homepage": "https://github.com/Tsiegmund/dudescanner#readme",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}
