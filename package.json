@@ -17,6 +17,11 @@
   },
   "homepage": "https://github.com/Tsiegmund/dudescanner#readme",
   "dependencies": {
-    "express": "^4.18.1"
+    "body-parser": "^1.20.0",
+    "ejs": "^3.1.8",
+    "express": "^4.18.1",
+    "fs": "0.0.1-security",
+    "html": "^1.0.0",
+    "path": "^0.12.7"
   }
 }
