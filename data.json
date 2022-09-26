@@ -1,5 +1,1 @@
-{
-    "name": "Example",
-    "password": "Example",
-    "accNum": "Example"
-}
+{"accounts":[{"name":"Example","password":"Example","accNum":"Example"},{"name":"e","password":"e","accNum":"p"}]}
