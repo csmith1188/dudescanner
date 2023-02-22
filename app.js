@@ -133,20 +133,20 @@ app.post('/signup', function (request, response) {
 })
 
 app.get('/logout', function (request, response) {
-  console.log(3);
+;
   request.session.user = null;
   request.session.save(function (error) {
-    console.log(4);
+
     if (error) throw error;
     request.session.regenerate(function (error) {
-      console.log(5);
+
       if (error) throw error;
       response.redirect('/login');
     })
   })
 })
 
-app.get('/changePassword', function (request, response) {
+app.get('/changePassword', isAuthenticated, function (request, response) {
   try {
     response.render('changePassword.ejs');
   } catch (error) {
@@ -182,27 +182,29 @@ app.post('/changePassword', function (request, response) {
 
 
 app.get('/deleteAccount', function (request, response) {
-  console.log(1);
+
   username = request.session.user;
   database.get('DELETE FROM users WHERE username = ?', [username], (error, results) => {
-    console.log(2);
+
     if (error) throw error;
     response.redirect('/logout');
   })
 })
 
-app.get('/acc', function (request, response) {
-  database.get(`SELECT * FROM users Where perms = 0`, (error, results) => {
-    if (results) {
-      database.get('SELECT * FROM users', function (error, results) {
-        console.log(results)
+app.get('/acc', isAuthenticated, function (request, response) {
+  // this will get the perms from the username that is currently log in. it will check the perms of that user and make sure it is teacher level.
+  database.get(`SELECT perms FROM users Where username = ?`,[request.session.user], (error, results) => {
+    if (results.perms == '0') {
+      // the database well grab all the users and send it to the ejs to sort out all the accounts name and perms.
+      database.all('SELECT * FROM users', function (error, users) {
+        // console.log(users)
+       // console.log(request.session.user);
         response.render('acc.ejs', {
-          user: request.session.user,
-          perms: results.perms
+          user: users
         })
       })
     } else {
-      response.render('/')
+      response.redirect('/')
     }
   })
 })

@@ -2,7 +2,7 @@
 <html lang="en">
 
 <style>
-    CSS link not working, using <style> tag until free time to update it
+    /* CSS link not working, using <style> tag until free time to update it */
     body {
         background-color: darksalmon;
         text-align: left;
@@ -35,14 +35,13 @@
 <div class="userInfo">
 
     <body>
-        <div id="user">
-            <%= user %>
-        </div>
-        <div id="userperms">
-            <% if (perms <= 0) { %>
-            Your perms are <%= perms %>
-            <% } %>
-        </div>
+        <% for (let i = 0; i < user.length; i++) { %>
+            <div id="user"> user: <%= user[i].username %></div>
+            <div id="userperms"> Perms are <%= user[i].perms %></div>
+            <br>
+
+        <%}%>
+
 
         <div id="links">
             <a id="home" href="/">home</a>
