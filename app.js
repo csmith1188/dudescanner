@@ -212,8 +212,10 @@ app.get('/acc', function (request, response) {
       database.all('SELECT * FROM users', function (error, results) {
         console.log(results)
         response.render('acc.ejs', {
-          user: results.username,
-          perms: results.perms
+          user: request.session.user,
+          perms: results.perms,
+          studentid: results.studentid
+
         })
       })
     } else {
