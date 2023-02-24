@@ -27,11 +27,43 @@ app.use(session({
 // Setup Variables
 const port = 3000;
 
+const pagePermissions = {
+  acc: 1,
+  login: 3,
+  signup: 3,
+  logout: 2,
+  changePassword: 2,
+  deleteAccount: 2
+}
+
 // Functions
 // if there is a user signed in, continue. Otherwise, redirect them to the login page.
 function isAuthenticated(request, response, next) {
   if (request.session.user) next();
   else response.redirect('/login');
+}
+
+function permCheck(request, response, next) {
+  if (request.url) {
+    // Defines users desired endpoint
+    let urlPath = request.url
+    // Checks if url has a / in it and removes it from the string
+    if (urlPath.indexOf('/') != -1) {
+      urlPath = urlPath.slice(urlPath.indexOf('/') + 1)
+    }
+    // Check for ?(urlParams) and removes it from the string
+    if (urlPath.indexOf('?') != -1) {
+      console.log(urlPath.indexOf('?'));
+      urlPath = urlPath.slice(0, urlPath.indexOf('?'))
+    }
+    // Checks if users permissions are high enough
+    console.log([request.session.perms])
+    if ([request.session.perms] <= pagePermissions[urlPath]) {
+      next()
+    } else {
+      response.send('Not High Enough Permissions')
+    }
+  }
 }
 
 
@@ -118,7 +150,7 @@ app.post('/signup', function (request, response) {
                 if (!results) {
                   // Insert the data provided into the database. Selects the user's username and encrypted password, provides the perms of a teacher, and
                   // assigns a random student ID. <!!! Will be changed into a user provided student ID for when the scanner is working !!!>
-                  database.get(`INSERT INTO users (username, password, perms, studID) VALUES (?, ?, ?, ?)`, [username, hashedPassword, 0, Math.floor(100000 + Math.random() * 900000)], (error) => {
+                  database.get(`INSERT INTO users (username, password, perms, studentid) VALUES (?, ?, ?, ?)`, [username, hashedPassword, 0, Math.floor(100000 + Math.random() * 900000)], (error) => {
                     if (error) throw error;
                     request.session.user = username;
                     response.redirect('/');
@@ -126,7 +158,7 @@ app.post('/signup', function (request, response) {
                 } else {
                   // Insert the data provided into the database. Selects the user's username and encrypted password, provides the perms of a student, and
                   // assigns a random student ID. <!!! Will be changed into a user provided student ID for when the scanner is working !!!>
-                  database.get(`INSERT INTO users (username, password, perms, studID) VALUES (?, ?, ?, ?)`, [username, hashedPassword, 2, Math.floor(100000 + Math.random() * 900000)], (error) => {
+                  database.get(`INSERT INTO users (username, password, perms, studentid) VALUES (?, ?, ?, ?)`, [username, hashedPassword, 2, Math.floor(100000 + Math.random() * 900000)], (error) => {
                     if (error) throw error;
                     request.session.user = username;
                     response.redirect('/');
@@ -205,16 +237,12 @@ app.get('/deleteAccount', function (request, response) {
 
 app.get('/acc', isAuthenticated, permCheck, function (request, response) {
   // Select every entry in the users table
-database.all('SELECT * FROM users', function (error, users) {
-        // console.log(users)
-       // console.log(request.session.user);
-        response.render('acc.ejs', {
-          user: users
-        })
-      })
-    } else {
-      response.redirect('/')
-    }
+  database.all('SELECT * FROM users', function (error, users) {
+    // console.log(users)
+    // console.log(request.session.user);
+    response.render('acc.ejs', {
+      user: users
+    })
   })
 })
 
