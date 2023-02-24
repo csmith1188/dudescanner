@@ -1,38 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
-<style>
-    /* CSS link not working, using <style> tag until free time to update it */
-    body {
-        background-color: darksalmon;
-        font-size: xx-large;
-        text-align: center;
-    }
-    div {
-        text-align: left;
-        margin-top: 50px;
-    }
-</style>
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
+    <link rel="stylesheet" href="style.css">
     <script>
+
+    /* function to delete your account. */
     function confirmDelete() {
         if (confirm('Are you sure you want to delete your account?')) {
             window.location.href = "/deleteAccount";
         }
-    }
     </script>
 </head>
 
 <body>
-    <p>Welcome Back, <%=user%>!</p>
+    <!-- In the paragraph tag, we inserted the user from app.js in order to read
+         the proper acc name, no matter the account signed in-->
+    <p>Welcome Back <%=user%>!</p>
     <div>
     <a href="/logout">logout</a>
     <a href="/changePassword">Change Password</a>
-    <% if (perms == 0) { %>
+    <!-- If the user from app.js has admin level perms, a button will appear that
+         takes them to the /acc page.-->
+    <% if (perms <= 1) { %>
         <a href="/acc">View Accounts</a>
     <% } %>
     <% if (perms == 0) { %>
