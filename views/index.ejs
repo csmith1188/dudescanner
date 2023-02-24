@@ -28,12 +28,17 @@
 </head>
 
 <body>
-    <p>Welcome Back <%=user%>!</p>
+    <p>Welcome Back, <%=user%>!</p>
     <div>
     <a href="/logout">logout</a>
     <a href="/changePassword">Change Password</a>
     <% if (perms == 0) { %>
         <a href="/acc">View Accounts</a>
+    <% } %>
+    <% if (perms == 0) { %>
+        <form action="/scan" method="post">
+        <input type="text" name="textbox" />
+        <input type="submit" value="submit">
     <% } %>
     <button onclick='confirmDelete()'>Delete Account</button>
     </div>

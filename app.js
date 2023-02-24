@@ -198,7 +198,8 @@ app.get('/acc', function (request, response) {
         console.log(results)
         response.render('acc.ejs', {
           user: request.session.user,
-          perms: results.perms
+          perms: results.perms,
+          studentid: results.studentid
         })
       })
     } else {
