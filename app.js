@@ -203,23 +203,17 @@ app.get('/deleteAccount', function (request, response) {
   })
 })
 
-// Account page
-app.get('/acc', function (request, response) {
+app.get('/acc', isAuthenticated, permCheck, function (request, response) {
   // Select every entry in the users table
-  database.get(`SELECT * FROM users`, (error, results) => {
-    // If there were accounts found, send the data to the acc.ejs page.
-    if (results) {
-      database.all('SELECT * FROM users', function (error, results) {
-        console.log(results)
+database.all('SELECT * FROM users', function (error, users) {
+        // console.log(users)
+       // console.log(request.session.user);
         response.render('acc.ejs', {
-          user: request.session.user,
-          perms: results.perms,
-          studentid: results.studentid
-
+          user: users
         })
       })
     } else {
-      response.render('/')
+      response.redirect('/')
     }
   })
 })
