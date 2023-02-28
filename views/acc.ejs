@@ -13,6 +13,9 @@
         <% for (let i = 0; i < user.length; i++) { %>
             <div id="user"> user: <%= user[i].username %></div>
             <div id="userperms"> Perms are <%= user[i].perms %></div>
+            <div id="userperms"> Student Id is <% if (user[i].studentid) { %> <%= user[i].studentid %> <%} else { %>
+                undefined
+            <%} %></div>
             <br>
         <%}%>
         <div id="links">
@@ -21,5 +24,11 @@
         </div>
     </body>
 </div>
+<script>
+    if (user[i].studentid) {
+        
+    } else {
 
+    }
+</script>
 </html>
