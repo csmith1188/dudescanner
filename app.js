@@ -111,6 +111,7 @@ app.post('/login', function (request, response) {
             if (isMatch) {
               if (error) throw error;
               request.session.user = username;
+              request.session.perms = results.perms
               response.redirect('/');
             } else response.redirect('/login');
           })
