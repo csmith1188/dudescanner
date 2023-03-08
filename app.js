@@ -61,7 +61,7 @@ function permCheck(request, response, next) {
       if ([request.session.perms] <= pagePermissions[urlPath]) {
           next()
       } else {
-          response.send('<script>alert("NOT HIGH ENOUGH"); window.location.href = "/"; </script>')
+          response.send('<script>alert("Not High Enough Permissions"); window.location.href = "/"; </script>')
       }
   }
 }
