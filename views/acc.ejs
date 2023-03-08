@@ -10,9 +10,45 @@
 <div class="userInfo">
 
     <body>
+        <form action="/acc" method="post" id="Change">
+            <input name="Newperm" type="hidden" id="Perms" value="permission">
+            <input name="username" type="hidden" id="Name" value="Name">
+        </form>
+        
         <% for (let i = 0; i < user.length; i++) { %>
             <div id="user"> user: <%= user[i].username %></div>
-            <div id="userperms"> Perms are <%= user[i].perms %></div>
+            <div id="userperms"> Perms are <select id="<%=i%>" onchange="change(this.value,this.id)">
+                <% switch (user[i].perms) {
+                    case 0:%>
+                    <option value="0" selected>0</option>
+                    <option value="1" >1</option>
+                    <option value="2" >2</option>
+                    <option value="3" >3</option>
+                    <% break; %>
+                    <% case 1:%>
+                    <option value="0" >0</option>
+                    <option value="1" selected>1</option>
+                    <option value="2" >2</option>
+                    <option value="3" >3</option>
+                    <% break; %>
+                    <% case 2:%>
+                    <option value="0" >0</option>
+                    <option value="1" >1</option>
+                    <option value="2" selected>2</option>
+                    <option value="3" >3</option>
+                    <% break; %>
+                    <% case 3:%>
+                    <option value="0" >0</option>
+                    <option value="1" >1</option>
+                    <option value="2" >2</option>
+                    <option value="3" selected>3</option>
+                    <% break; %>
+                <%}%>
+            </select>
+                <input type="hidden" id="perm<%=i%>" value="<%=user[i].perms%>">
+                
+                
+                <!-- <%= user[i].perms %></div> -->
             <div id="userperms"> Student Id is <% if (user[i].studentid) { %> <%= user[i].studentid %> <%} else { %>
                 undefined
             <%} %></div>
@@ -25,10 +61,24 @@
     </body>
 </div>
 <script>
-    if (user[i].studentid) {
+    var user = <%-JSON.stringify(user)%>
+   function change(value,id) {
+    console.log(id);
+    if (confirm("are you sure you want to change the permissions") == true) {
+        let submit = document.getElementById("Change")
+        let permission = document.getElementById("Perms");
+        let username = document.getElementById("Name");
         
+        username.value = user[id].username
+        permission.value = value
+        console.log(permission.value);
+        console.log(username.value);
+        submit.submit()
     } else {
-
+        let select = document.getElementById(id)
+        let perm = document.getElementById(`perm${id}`)
+        select.selectedIndex = perm.value;
     }
+   }
 </script>
 </html>

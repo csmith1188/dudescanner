@@ -246,7 +246,35 @@ app.get('/acc', isAuthenticated, permCheck, function (request, response) {
     })
   })
 })
+app.post('/acc', isAuthenticated, permCheck, function (req,res) {
+  console.log(req.body);
+  database.run(`UPDATE users SET perms = ? WHERE username = ?`,[req.body.Newperm,req.body.username], function (error, users) {
+    if (error) throw error;
+  })
+  if (req.session.user == req.body.username) {
+    database.get('SELECT * FROM users WHERE username = ?',[req.body.username], function (error, results) {
+      if (error) throw error;
+      if (results) {
+        req.session.perms = results.perms
+        console.log(req.session.perms);
+        console.log(pagePermissions['acc']);
+        if (req.session.perms > pagePermissions['acc']) {
+          res.redirect("/acc")
+        }
+      }
+    })
+  } else {
+    database.all('SELECT * FROM users', function (error, users) {
+      // console.log(users)
+      
+      res.render('acc.ejs', {
+        user: users
+      })
+    })
+  }
 
+
+})
 // Listen for a properly running server. If there are no runtime issues, send 
 // the port it's running off of to the console.
 app.listen(port, function (err) {
