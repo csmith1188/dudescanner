@@ -95,7 +95,8 @@ app.get('/login', function (request, response) {
 app.post('/login', function (request, response) {
   const {
     username,
-    password
+    password,
+    studentid
   } = request.body;
   request.session.regenerate(function (error) {
     if (error) throw error;
@@ -117,7 +118,21 @@ app.post('/login', function (request, response) {
           })
         } else response.redirect('/login')
       })
-    } else response.redirect('/login')
+    } else {
+      if (studentid) {
+       database.get(`SELECT * FROM users Where studentid = ?`, [studentid], function (error, results){
+        if (results) {
+          request.session.user = results.username;
+          request.session.perms = results.perms
+          response.redirect('/')
+        } else {
+          response.redirect('/signup')
+        }
+       })
+      } else {
+        response.redirect('/')
+      }
+      }
   })
 })
 
@@ -133,12 +148,13 @@ app.post('/signup', function (request, response) {
   const {
     username,
     password,
-    confirmPassword
+    confirmPassword,
+    studentid
   } = request.body;
   request.session.regenerate(function (error) {
     if (error) throw error;
-    if (username && password && confirmPassword) {
-      database.get(`SELECT * FROM users Where username = ?`, [username], (error, results) => {
+    if (username && password && confirmPassword && studentid) {
+      database.get(`SELECT * FROM users Where username = ? OR studentid = ?`, [username, studentid], (error, results) => {
         if (error) throw error;
         if (!results) {
           if (password == confirmPassword) {
@@ -151,7 +167,7 @@ app.post('/signup', function (request, response) {
                 if (!results) {
                   // Insert the data provided into the database. Selects the user's username and encrypted password, provides the perms of a teacher, and
                   // assigns a random student ID. <!!! Will be changed into a user provided student ID for when the scanner is working !!!>
-                  database.get(`INSERT INTO users (username, password, perms, studentid) VALUES (?, ?, ?, ?)`, [username, hashedPassword, 0, Math.floor(100000 + Math.random() * 900000)], (error) => {
+                  database.get(`INSERT INTO users (username, password, perms, studentid) VALUES (?, ?, ?, ?)`, [username, hashedPassword, 0, studentid], (error) => {
                     if (error) throw error;
                     request.session.user = username;
                     response.redirect('/');
@@ -159,7 +175,7 @@ app.post('/signup', function (request, response) {
                 } else {
                   // Insert the data provided into the database. Selects the user's username and encrypted password, provides the perms of a student, and
                   // assigns a random student ID. <!!! Will be changed into a user provided student ID for when the scanner is working !!!>
-                  database.get(`INSERT INTO users (username, password, perms, studentid) VALUES (?, ?, ?, ?)`, [username, hashedPassword, 2, Math.floor(100000 + Math.random() * 900000)], (error) => {
+                  database.get(`INSERT INTO users (username, password, perms, studentid) VALUES (?, ?, ?, ?)`, [username, hashedPassword, 2, studentid], (error) => {
                     if (error) throw error;
                     request.session.user = username;
                     response.redirect('/');
