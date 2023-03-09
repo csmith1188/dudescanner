@@ -224,6 +224,26 @@ app.get('/acc', function (request, response) {
   })
 })
 
+app.post('/scan', function(req, res) {
+  const studentid = req.body.studentid;
+  database.get("SELECT * FROM users WHERE studentid = ?", [studentid], function(err, result) {
+      if (err) {
+          console.log(err);
+          return res.sendStatus(500);
+      }
+      if (!result) {
+          res.render('scan', { idFound: false });
+      } else {
+          res.render('scan', {
+              idFound: true,
+              studentid: result.studentid,
+              firstName: result.firstName,
+              lastName: result.lastName
+          });
+      };
+  });
+});
+
 // Listen for a properly running server. If there are no runtime issues, send 
 // the port it's running off of to the console.
 app.listen(port, function (err) {
