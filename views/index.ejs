@@ -28,6 +28,7 @@
         <% if (perms <= 1) { %>
         <a href="/acc">View Accounts<br></a>
         <% } %>
+        <a href="/goingsomewhere">Going Somewhere?<br></a>
         <a href="/logout">Logout<br></a>
         <% if (perms == 0) { %>
         <form action="/scan" method="post">
@@ -35,6 +36,7 @@
             <input type="submit" value="Submit">
             <% } %>
             <button onclick='confirmDelete()'>Delete Account</button>
+        </form>
     </div>
 </body>
 

@@ -246,6 +246,17 @@ app.get('/acc', isAuthenticated, permCheck, function (request, response) {
     })
   })
 })
+app.get('/goingsomewhere', function (request, response) {
+  // Select every entry in the users table
+  studentid = request.session.studentid
+  database.all('SELECT * FROM users Where studentid = ?',[studentid], function (error, users) {
+    // console.log(users)
+    // console.log(request.session.user);
+    response.render('goingsomewhere.ejs', {
+      studentid: studentid
+    })
+  })
+})
 
 // Listen for a properly running server. If there are no runtime issues, send 
 // the port it's running off of to the console.
