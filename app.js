@@ -3,7 +3,7 @@ const express = require('express');
 const session = require('express-session');
 const sqlite3 = require('sqlite3').verbose();
 const bcrypt = require('bcrypt');
-
+const fs = require('fs')
 
 // Database Setup
 const database = new sqlite3.Database('./database.db', sqlite3.OPEN_READWRITE);
@@ -25,7 +25,8 @@ app.use(session({
 
 
 // Setup Variables
-const port = 3000;
+const port = 3000; // port the localhost will be running from
+
 
 const pagePermissions = {
   acc: 1,
@@ -35,6 +36,15 @@ const pagePermissions = {
   changePassword: 2,
   deleteAccount: 2
 }
+
+// if (!fs.existsSync(newFilePath)) { // check if file already exists
+//   const templateFile = fs.readFileSync(templateFilePath, 'utf8'); // read the contents of the template file
+
+//   fs.writeFileSync(newFilePath, templateFile); // create a new file and write the template file's contents to it
+//   console.log('New file created based on the template file.'); // log a success message to the console
+// } else {
+//   console.log('File already exists.'); // log a message to the console if the file already exists
+// }
 
 // Functions
 // if there is a user signed in, continue. Otherwise, redirect them to the login page.
@@ -245,6 +255,10 @@ app.get('/acc', isAuthenticated, permCheck, function (request, response) {
       user: users
     })
   })
+})
+
+app.post('/scan', function (request, response) {
+  response.render('scan.ejs')
 })
 
 // Listen for a properly running server. If there are no runtime issues, send 
