@@ -100,6 +100,7 @@
         var start = false
         var id = ""
         var STIMER = false
+        var timerStatus = "Stopped"
         document.addEventListener('keypress', e => {
             //usually scanners throw an 'Enter' key at the end of read
             console.log(e.key);
@@ -111,12 +112,16 @@
             if (e.keyCode === 62) {
                 console.log("end");
                 start = false
-                if (STIMER == false){
+                if (STIMER == false && timerStatus == "Stopped"){
                     STIMER = true;
+                    timerStatus = "Running"
                     startTimer()
-                } else {
+                } else if (STIMER == true && timerStatus == "Running") {
                     STIMER = false
                     stopTimer()
+                } else if (STIMER == false && timerStatus == "Running") {
+                    timerStatus = "Stopped"
+                    clearTimer()
                 }
                 console.log(id);
                 id = ""
