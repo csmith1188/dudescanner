@@ -3,7 +3,7 @@ const express = require('express');
 const session = require('express-session');
 const sqlite3 = require('sqlite3').verbose();
 const bcrypt = require('bcrypt');
-
+const fs = require('fs')
 
 // Database Setup
 const database = new sqlite3.Database('./database.db', sqlite3.OPEN_READWRITE);
@@ -25,7 +25,8 @@ app.use(session({
 
 
 // Setup Variables
-const port = 3000;
+const port = 3000; // port the localhost will be running from
+
 
 const pagePermissions = {
   acc: 1,
@@ -35,6 +36,15 @@ const pagePermissions = {
   changePassword: 2,
   deleteAccount: 2
 }
+
+// if (!fs.existsSync(newFilePath)) { // check if file already exists
+//   const templateFile = fs.readFileSync(templateFilePath, 'utf8'); // read the contents of the template file
+
+//   fs.writeFileSync(newFilePath, templateFile); // create a new file and write the template file's contents to it
+//   console.log('New file created based on the template file.'); // log a success message to the console
+// } else {
+//   console.log('File already exists.'); // log a message to the console if the file already exists
+// }
 
 // Functions
 // if there is a user signed in, continue. Otherwise, redirect them to the login page.
@@ -95,7 +105,8 @@ app.get('/login', function (request, response) {
 app.post('/login', function (request, response) {
   const {
     username,
-    password
+    password,
+    studentid
   } = request.body;
   request.session.regenerate(function (error) {
     if (error) throw error;
@@ -117,7 +128,21 @@ app.post('/login', function (request, response) {
           })
         } else response.redirect('/login')
       })
-    } else response.redirect('/login')
+    } else {
+      if (studentid) {
+       database.get(`SELECT * FROM users Where studentid = ?`, [studentid], function (error, results){
+        if (results) {
+          request.session.user = results.username;
+          request.session.perms = results.perms
+          response.redirect('/')
+        } else {
+          response.redirect('/signup')
+        }
+       })
+      } else {
+        response.redirect('/')
+      }
+      }
   })
 })
 
@@ -133,12 +158,13 @@ app.post('/signup', function (request, response) {
   const {
     username,
     password,
-    confirmPassword
+    confirmPassword,
+    studentid
   } = request.body;
   request.session.regenerate(function (error) {
     if (error) throw error;
-    if (username && password && confirmPassword) {
-      database.get(`SELECT * FROM users Where username = ?`, [username], (error, results) => {
+    if (username && password && confirmPassword && studentid) {
+      database.get(`SELECT * FROM users Where username = ? OR studentid = ?`, [username, studentid], (error, results) => {
         if (error) throw error;
         if (!results) {
           if (password == confirmPassword) {
@@ -151,7 +177,7 @@ app.post('/signup', function (request, response) {
                 if (!results) {
                   // Insert the data provided into the database. Selects the user's username and encrypted password, provides the perms of a teacher, and
                   // assigns a random student ID. <!!! Will be changed into a user provided student ID for when the scanner is working !!!>
-                  database.get(`INSERT INTO users (username, password, perms, studentid) VALUES (?, ?, ?, ?)`, [username, hashedPassword, 0, Math.floor(100000 + Math.random() * 900000)], (error) => {
+                  database.get(`INSERT INTO users (username, password, perms, studentid) VALUES (?, ?, ?, ?)`, [username, hashedPassword, 0, studentid], (error) => {
                     if (error) throw error;
                     request.session.user = username;
                     response.redirect('/');
@@ -159,7 +185,7 @@ app.post('/signup', function (request, response) {
                 } else {
                   // Insert the data provided into the database. Selects the user's username and encrypted password, provides the perms of a student, and
                   // assigns a random student ID. <!!! Will be changed into a user provided student ID for when the scanner is working !!!>
-                  database.get(`INSERT INTO users (username, password, perms, studentid) VALUES (?, ?, ?, ?)`, [username, hashedPassword, 2, Math.floor(100000 + Math.random() * 900000)], (error) => {
+                  database.get(`INSERT INTO users (username, password, perms, studentid) VALUES (?, ?, ?, ?)`, [username, hashedPassword, 2, studentid], (error) => {
                     if (error) throw error;
                     request.session.user = username;
                     response.redirect('/');
@@ -246,6 +272,7 @@ app.get('/acc', isAuthenticated, permCheck, function (request, response) {
     })
   })
 })
+
 app.post('/acc', isAuthenticated, permCheck, function (req,res) {
   console.log(req.body);
   database.run(`UPDATE users SET perms = ? WHERE username = ?`,[req.body.Newperm,req.body.username], function (error, users) {
@@ -273,6 +300,22 @@ app.post('/acc', isAuthenticated, permCheck, function (req,res) {
     })
   }
 
+  
+app.get('/goingsomewhere', function (request, response) {
+  // Select every entry in the users table
+  studentid = request.session.studentid
+  database.all('SELECT * FROM users Where studentid = ?',[studentid], function (error, users) {
+    // console.log(users)
+    // console.log(request.session.user);
+    response.render('goingsomewhere.ejs', {
+      studentid: studentid
+    })
+  })
+})
+
+app.post('/scan', function (request, response) {
+  response.render('scan.ejs')
+})
 
 })
 // Listen for a properly running server. If there are no runtime issues, send 
