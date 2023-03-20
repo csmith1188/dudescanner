@@ -12,7 +12,7 @@
 
 <body>
     <p id="one">Login</p>
-    <form action="/login" method="post" autocomplete='on'>
+    <form action="/login" method="post" autocomplete='on' id="log">
         <div class="username1">
             <span>Username</span>
             <input type="text" placeholder="Username" name="username" autocomplete="username">
@@ -22,10 +22,37 @@
             <input type="password" placeholder="Password" name="password" autocomplete="password">
         </div>
         <input type="submit" value="Login">
+        <input type="hidden" name="studentid" value="" id="ID">
     </form>
     <!-- You can put a link inside of a paragraph tag like this, allowing for a more natural
          link to be accessible.-->
     <p>No account? <a href="/signup">Signup</a> here</p>
 </body>
+<script> 
+var start = false
+var timer = false
+var id = ""
+document.addEventListener('keypress', e => {
+  //usually scanners throw an 'Enter' key at the end of read
+  console.log(e.key);
 
+  if (e.keyCode === 64 && start == false) {
+    console.log("start");
+    start = true
+
+  }
+
+  if (e.keyCode === 62) {
+    console.log("end");
+    start = false
+    document.getElementById('ID').value = id
+    document.getElementById('log').submit()
+    console.log(id);
+    id = ""
+}
+  if (start == true && e.keyCode !== 64) {
+    id += e.key
+  }
+});
+</script>
 </html>
