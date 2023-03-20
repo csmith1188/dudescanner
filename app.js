@@ -256,6 +256,17 @@ app.get('/acc', isAuthenticated, permCheck, function (request, response) {
     })
   })
 })
+app.get('/goingsomewhere', function (request, response) {
+  // Select every entry in the users table
+  studentid = request.session.studentid
+  database.all('SELECT * FROM users Where studentid = ?',[studentid], function (error, users) {
+    // console.log(users)
+    // console.log(request.session.user);
+    response.render('goingsomewhere.ejs', {
+      studentid: studentid
+    })
+  })
+})
 
 app.post('/scan', function (request, response) {
   response.render('scan.ejs')
