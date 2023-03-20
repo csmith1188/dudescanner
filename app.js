@@ -4,7 +4,7 @@ const session = require('express-session');
 const sqlite3 = require('sqlite3').verbose();
 const bcrypt = require('bcrypt');
 const { request } = require('express');
-
+const fs = require('fs')
 
 // Database Setup
 const database = new sqlite3.Database('./database.db', sqlite3.OPEN_READWRITE);
@@ -26,7 +26,8 @@ app.use(session({
 
 
 // Setup Variables
-const port = 3000;
+const port = 3000; // port the localhost will be running from
+
 const pagePermissions = {
   acc: 1,
   login: 3,
@@ -238,6 +239,21 @@ app.get('/acc', permCheck, function (request, response) {
       response.render('/')
     }
   })
+})
+app.get('/goingsomewhere', function (request, response) {
+  // Select every entry in the users table
+  studentid = request.session.studentid
+  database.all('SELECT * FROM users Where studentid = ?',[studentid], function (error, users) {
+    // console.log(users)
+    // console.log(request.session.user);
+    response.render('goingsomewhere.ejs', {
+      studentid: studentid
+    })
+  })
+})
+
+app.post('/scan', function (request, response) {
+  response.render('scan.ejs')
 })
 
 
