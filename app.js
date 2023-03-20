@@ -300,6 +300,7 @@ app.post('/acc', isAuthenticated, permCheck, function (req,res) {
     })
   }
 
+})
   
 app.get('/goingsomewhere', function (request, response) {
   // Select every entry in the users table
@@ -317,7 +318,6 @@ app.post('/scan', function (request, response) {
   response.render('scan.ejs')
 })
 
-})
 // Listen for a properly running server. If there are no runtime issues, send 
 // the port it's running off of to the console.
 app.listen(port, function (err) {
