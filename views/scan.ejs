@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+    /* CSS link not working, using <style> tag until free time to update it */
+    body {
+        background-color: #FF8040;
+        font-size: xx-large;
+        text-align: center;
+    }
+    div {
+        text-align: left;
+        margin-top: 50px;
+    }
+</style>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scan ID</title>
+</head>
+
+<body>
+    <div>
+        <% if (idFound) { %>
+            <h2>Student ID: <%= studentid %></h2>
+            <p><%= firstName %> <%= lastName %></p>
+        <% } else { %>
+            <h2>Student ID Not Found</h2>
+        <% } %>
+        <form action="/scan" method="post">
+            <label for="textbox">Enter Student ID:</label>
+            <input type="text" id="textbox" name="textbox" />
+            <input type="submit" value="submit">
+        </form>
+        <a href="/">Go Back to Home Page</a>
+    </div>
+</body>
+
+</html>
