@@ -3,31 +3,18 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>"Simple" Stopwatch</title>
-    <link href="./style.css" rel="stylesheet">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-
     <div id='timer'>00:00:00:00</div>
-    <div id='labels'>
-        <span id='hh'>Hours</span>
-        <span id='mm'>Minutes</span>
-        <span id='ss'>Seconds</span>
-        <span id='ms'>Centiseconds</span>
-    </div>
-
-    <div id='controls'>
-        <button onclick='startTimer()' id='go'>Go</button>
-        <button onclick='stopTimer()' id='stop'>Stop</button>
-        <button onclick='clearTimer()' id='clear'>Clear</button>
-    </div>
-
-
-    <script>
-        T = {};
+    <div id='labels'> <span id='hh'>Hours</span> <span id='mm'>Minutes</span> <span id='ss'>Seconds</span> <span
+            id='ms'>Centiseconds</span> </div>
+    <script>        T = {};
         T.timerDiv = document.getElementById('timer');
-
         function displayTimer() {
             // initilized all local variables:
             var hours = '00',
@@ -36,9 +23,7 @@
                 seconds = '00',
                 time = '',
                 timeNow = new Date().getTime(); // timestamp (miliseconds)
-
             T.difference = timeNow - T.timerStarted;
-
             // milliseconds
             if (T.difference > 10) {
                 miliseconds = Math.floor((T.difference % 1000) / 10);
@@ -56,7 +41,6 @@
                     seconds = '0' + String(seconds);
                 }
             }
-
             // minutes
             if (T.difference > 60000) {
                 minutes = Math.floor(T.difference / 60000);
@@ -67,31 +51,26 @@
                     minutes = '0' + String(minutes);
                 }
             }
-
             // hours
             if (T.difference > 3600000) {
                 hours = Math.floor(T.difference / 3600000);
                 // if (hours > 24) {
-                // 	hours = hours % 24;
+                //  hours = hours % 24;
                 // }
                 if (hours < 10) {
                     hours = '0' + String(hours);
                 }
             }
-
             time = hours + ':'
             time += minutes + ':'
             time += seconds + ':'
             time += miliseconds;
-
             T.timerDiv.innerHTML = time;
         }
-
         function startTimer() {
             // save start time
             T.timerStarted = new Date().getTime()
             console.log('T.timerStarted: ' + T.timerStarted)
-
             if (T.difference > 0) {
                 T.timerStarted = T.timerStarted - T.difference
             }
@@ -99,33 +78,61 @@
             T.timerInterval = setInterval(function () {
                 displayTimer()
             }, 10);
-
             // show / hide the relevant buttons:
             document.getElementById('go').style.display = "none";
             document.getElementById('stop').style.display = "inline";
             document.getElementById('clear').style.display = "none";
         }
-
         function stopTimer() {
             clearInterval(T.timerInterval); // stop updating the timer
-
             document.getElementById('stop').style.display = "none";
             document.getElementById('go').style.display = "inline";
             document.getElementById('clear').style.display = "inline";
         }
-
-        function goHome() {
+        function clearTimer() {
             clearInterval(T.timerInterval);
             T.timerDiv.innerHTML = "00:00:00:00"; // reset timer to all zeros
             T.difference = 0;
-            response.redirect('/')
-
             document.getElementById('stop').style.display = "none";
             document.getElementById('go').style.display = "inline";
             document.getElementById('clear').style.display = "none";
         }
-        window.onload = startTimer
+        var start = false
+        var id = ""
+        var STIMER = false
+        var timerStatus = "Stopped"
+        document.addEventListener('keypress', e => {
+            //usually scanners throw an 'Enter' key at the end of read
+            console.log(e.key);
+
+            if (e.keyCode === 64 && start == false) {
+                console.log("start");
+                start = true
+            }
+            if (e.keyCode === 62) {
+                console.log("end");
+                start = false
+                if (STIMER == false && timerStatus == "Stopped"){
+                    STIMER = true;
+                    timerStatus = "Running"
+                    startTimer()
+                } else if (STIMER == true && timerStatus == "Running") {
+                    STIMER = false
+                    stopTimer()
+                } else if (STIMER == false && timerStatus == "Running") {
+                    timerStatus = "Stopped"
+                    clearTimer()
+                }
+                console.log(id);
+                id = ""
+            }
+            if (start == true && e.keyCode !== 64) {
+                id += e.key
+            }
+        });
     </script>
+    </script>
+
 
 </body>
 

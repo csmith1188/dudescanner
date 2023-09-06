@@ -14,7 +14,31 @@
                 window.location.href = "/deleteAccount";
             }
         }
-    }
+
+        function checkData() {
+            var start = false
+            var timer = false
+            var id = ""
+            document.addEventListener('keypress', e => {
+                //usually scanners throw an 'Enter' key at the end of read
+                console.log(e.key);
+                if (e.keyCode === 64 && start == false) {
+                    console.log("start");
+                    start = true
+                }
+                if (e.keyCode === 62) {
+                    console.log("end");
+                    start = false
+                    document.getElementById('ID').value = id
+                    document.getElementById('log').submit()
+                    console.log(id);
+                    id = ""
+                }
+                if (start == true && e.keyCode !== 64) {
+                    id += e.key
+                }
+            });
+        }
     </script>
 </head>
 
@@ -29,13 +53,15 @@
         <% if (perms <= 1) { %>
         <a href="/acc">View Accounts<br></a>
         <% } %>
+        <a href="/goingsomewhere">Going Somewhere?<br></a>
         <a href="/logout">Logout<br></a>
         <% if (perms == 0) { %>
         <form action="/scan" method="post">
-            <input type="text" name="textbox" /><br>
-            <input type="submit" value="Submit">
+            <input id='scanBox' type="text" name="textbox" /><br>
+            <input type="submit" value="Submit" onclick="checkData()">
             <% } %>
             <button onclick='confirmDelete()'>Delete Account</button>
+        </form>
     </div>
 </body>
 
