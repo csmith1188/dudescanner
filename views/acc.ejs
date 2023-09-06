@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,22 +9,26 @@
 </head>
 <div class="userInfo">
 
-    <body id="acc">
-        <div id="user">
-            Your Username is <%= user %>
-            Your Student ID is<%= studentid %>
-        </div>
-        <div id="userperms">
-            <% if (perms <= 0) { %>
-            Your perms are <%= perms %>
-            <% } %>
-        </div>
-
+    <body>
+        <% for (let i = 0; i < user.length; i++) { %>
+            <div id="user"> user: <%= user[i].username %></div>
+            <div id="userperms"> Perms are <%= user[i].perms %></div>
+            <div id="userperms"> Student Id is <% if (user[i].studentid) { %> <%= user[i].studentid %> <%} else { %>
+                undefined
+            <%} %></div>
+            <br>
+        <%}%>
         <div id="links">
             <a id="home" href="/">Home <br></a>
             <a href="/logout">Logout <br></a>
         </div>
     </body>
 </div>
+<script>
+    if (user[i].studentid) {
+        
+    } else {
 
+    }
+</script>
 </html>
