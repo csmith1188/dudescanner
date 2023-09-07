@@ -13,8 +13,17 @@
     <div id='timer'>00:00:00:00</div>
     <div id='labels'> <span id='hh'>Hours</span> <span id='mm'>Minutes</span> <span id='ss'>Seconds</span> <span
             id='ms'>Centiseconds</span> </div>
-    <script>        T = {};
+
+    <div id='controls'>
+        <button onclick="startTimer()" id="go">Go</button>
+        <button onclick="clearTimer()" id="clear">Clear</button>
+        <button onclick="stopTimer()" id="stop">Stop</button>
+    </div>
+
+    <script>        
+        T = {};
         T.timerDiv = document.getElementById('timer');
+        
         function displayTimer() {
             // initilized all local variables:
             var hours = '00',
@@ -23,7 +32,7 @@
                 seconds = '00',
                 time = '',
                 timeNow = new Date().getTime(); // timestamp (miliseconds)
-            T.difference = timeNow - T.timerStarted;
+                T.difference = timeNow - T.timerStarted;
             // milliseconds
             if (T.difference > 10) {
                 miliseconds = Math.floor((T.difference % 1000) / 10);

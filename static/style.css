@@ -14,7 +14,7 @@
 }
 
 #links {
-    text-align: left;
+    text-align: center;
     margin-top: 5px;
     font-size: x-large;
 }
@@ -34,7 +34,6 @@ body {
     font-size: xx-large;
     text-align: center;
     color: #1EE198;
-
 }
 a:link {
     color: #981EE1;
