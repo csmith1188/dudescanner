@@ -115,7 +115,7 @@
         }
         function clearTimer() {
             clearInterval(T.timerInterval);
-            T.timerInterval.innerHTML = "00:00:00:00"; // reset timer to all zeros
+            T.timerDiv.innerHTML = "00:00:00:00"; // reset timer to all zeros
             T.difference = 0; 
             document.getElementById('stop').style.display = "none";
             document.getElementById('go').style.display = "inline";
