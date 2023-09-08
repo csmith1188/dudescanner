@@ -6,7 +6,10 @@
     color: #7AE996;
 
 }
-
+#deleteAccount{
+background-color: aqua;
+text-align: center;
+}
 #one {
     text-align: center;
     font-style: italic;

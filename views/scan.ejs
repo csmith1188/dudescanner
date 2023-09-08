@@ -25,6 +25,7 @@
 
 
     <script>
+        
         T = {};
         T.timerDiv = document.getElementById('timer');
 
@@ -113,7 +114,14 @@
             document.getElementById('go').style.display = "inline";
             document.getElementById('clear').style.display = "inline";
         }
-
+        function clearTimer() {
+            clearInterval(T.timerInterval);
+            T.timerDiv.innerHTML = "00:00:00:00"; // reset timer to all zeros
+            T.difference = 0;
+            document.getElementById('stop').style.display = "none";
+            document.getElementById('go').style.display = "inline";
+            document.getElementById('clear').style.display = "none";
+        }
         function goHome() {
             clearInterval(T.timerInterval);
             T.timerDiv.innerHTML = "00:00:00:00"; // reset timer to all zeros
