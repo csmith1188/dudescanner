@@ -99,33 +99,46 @@
         }
         var start = false
         var id = ""
-        var STIMER = false
+        var SetTimer = false
         var timerStatus = "Stopped"
+        //usually scanners throw an 'Enter' key at the end of read
         document.addEventListener('keypress', e => {
-            //usually scanners throw an 'Enter' key at the end of read
+            //logs the key pressed
             console.log(e.key);
 
+            //Note: key code 64 is not availble on a standered computer
             if (e.keyCode === 64 && start == false) {
+                //If You have not started the timer, start it.
                 console.log("start");
                 start = true
             }
+            //Note: key code 62 is not availble on a standered computer
             if (e.keyCode === 62) {
+                //If You have not ended the timer, end it.
                 console.log("end");
                 start = false
-                if (STIMER == false && timerStatus == "Stopped"){
-                    STIMER = true;
+
+                //When scanned, check if the timer is on/off
+                //If off, set to on
+                if (SetTimer == false && timerStatus == "Stopped"){
+                    SetTimer = true;
                     timerStatus = "Running"
                     startTimer()
-                } else if (STIMER == true && timerStatus == "Running") {
-                    STIMER = false
+                } 
+                //If on, set to off
+                else if (SetTimer == true && timerStatus == "Running") {
+                    SetTimer = false
                     stopTimer()
-                } else if (STIMER == false && timerStatus == "Running") {
+                } 
+                //If timer stops, but status is running, clear the timer
+                else if (SetTimer == false && timerStatus == "Running") {
                     timerStatus = "Stopped"
                     clearTimer()
                 }
                 console.log(id);
                 id = ""
             }
+            
             if (start == true && e.keyCode !== 64) {
                 id += e.key
             }
